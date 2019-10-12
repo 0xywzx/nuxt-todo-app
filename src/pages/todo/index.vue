@@ -24,7 +24,7 @@ export default {
       this.$store.commit('todos/add', e.target.value)
     },
     ...mapMutations({
-      toggle: 'tools/toggle'
+      toggle: 'todos/toggle'
     })
   }
   
@@ -33,6 +33,6 @@ export default {
 
 <style>
 .done {
-text-decolation: line-through;
+  text-decolation: line-through;
 }
 </style>

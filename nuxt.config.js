@@ -1,6 +1,8 @@
 
 export default {
-  mode: 'universal',
+  srcDir: 'src/',
+  rootDir: './',
+  mode: 'spa',
   /*
   ** Headers of the page
   */
@@ -28,7 +30,10 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/element.js'
+    { src: '~/plugins/element.js' },
+    { src: '~/plugins/web3.js' },
+    { src: '~/plugins/ipfs.js' },
+    { src: '~/plugins/localStorage.js', ssr: false },
   ],
   /*
   ** Nuxt.js dev-modules
@@ -39,6 +44,7 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/axios'
   ],
   /*
   ** Build configuration

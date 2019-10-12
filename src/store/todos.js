@@ -6,7 +6,7 @@ export const mutations = {
   add (state, text) {
     state.list.push({
       text: text,
-      doen: false
+      done: false
     })
   },
   toggle (state, todo) {
