@@ -3,6 +3,7 @@ export const state = () => ({
   mnemonic: '',
   etherAddress: '',
   pk: '',
+  libraBalance: ''
 })
 
 export const mutations = {
@@ -17,7 +18,7 @@ export const mutations = {
   },
   setetherPk(state, pk) {
     state.pk = pk;
-  }
+  },
 };
 
 export const actions = {

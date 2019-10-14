@@ -11,7 +11,7 @@
             <span><img src="~/assets/img/libra-coin.png" style="width: 14px; height: 14px;">{{ item.price }}</span>
             <div class="bottom clearfix">
               <el-button type="text" class="button">詳細</el-button>
-              <el-button @click="purchase(item.id)" >購入する</el-button>
+              <el-button @click="purchase(item.id, item.seller, item.price)" >購入する</el-button>
             </div>
           </div>
         </el-card>
@@ -39,11 +39,18 @@ export default {
     ...mapActions({
       getOnSaleItems: "item/getOnSaleItems"
     }),
-    async purchase(itemId) {
+    async purchase(itemId, toAddress, amount) {
       const address = await this.$store.state.user.etherAddress
       const pk = await this.$store.state.user.pk
+      const mnemonic = await this.$store.state.user.mnemonic
       const functionAbi = await this.$flibraContract.methods.purchaseItem(itemId).encodeABI()
       await sendTx(this, address, pk, functionAbi)
+      const transferLibra = await this.$axios.post(`http://localhost:3005/transfer`, { 
+        fromAddress: address,
+        mnemonic: mnemonic,
+        toAddress: toAddress,
+        amount: amount 
+      })
     }
   },
   async created() {

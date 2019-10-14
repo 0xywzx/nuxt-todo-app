@@ -3,6 +3,7 @@
     <img src="~/assets/img/Libra-Freemarket-icon.png">
     <div style="padding: 30px;">
       <p> Libra Address: {{ $store.state.user.libraAddress }}</p>
+      <p> Libra Balance: {{ libraBalance }}</p>
       <p> Ether Address: {{ $store.state.user.etherAddress }}</p>
     </div>  
     <h2 class="title-text">投稿リスト</h2>
@@ -94,7 +95,8 @@ export default {
       visibleReviewToSeller: false,
       form: {
         star: '',
-        text: ''
+        text: '',
+        libraBalance: '',
       }
     }
   },
@@ -118,6 +120,9 @@ export default {
       getMyPurchaedItems: "item/getMyPurchaedItems",
       getMyPostedItems: "item/getMyPostedItems"
     }),
+    async getLibraBalance() {
+      const walletBalance = await axios.post(`http://localhost:3005/getBalance`, { address: address })
+    },
     async postReviewToPurchaser(itemId) {
       const functionAbi = await this.$flibraContract.methods.writeReviewToPurchaser(itemId, this.form.star, this.form.text).encodeABI()
       const address = await this.$store.state.user.etherAddress
@@ -131,9 +136,14 @@ export default {
       await sendTx(this, address, pk, functionAbi)
     },
   },
-  async mounted() {
+  async created() {
     await this.getMyPurchaedItems(this)
     await this.getMyPostedItems(this)
+  },
+  async asyncData({app, store, commit}) {
+    const address = await store.state.user.libraAddress;
+    const walletBalance = await app.$axios.post(`http://localhost:3005/getBalance`, { address: address })
+    return { libraBalance: walletBalance.data.balance } 
   }
 }
 
