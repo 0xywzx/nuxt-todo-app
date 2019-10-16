@@ -51,6 +51,7 @@ export default {
         toAddress: toAddress,
         amount: amount 
       })
+      console.log(transferLibra)
     }
   },
   async created() {
