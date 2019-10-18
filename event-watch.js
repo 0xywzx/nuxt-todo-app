@@ -12,7 +12,6 @@ async function setContract() {
   flibraContract.events.PostItem({   }, function(error, event){  })
   .on('data', function(event){
       console.log(event)
-      //console.log(event); // same results as the optional callback above
   })
   .on('changed', function(event){
       // remove event from local database
