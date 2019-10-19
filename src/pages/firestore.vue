@@ -8,7 +8,7 @@
          </tr>
        </tbody>
        <tbody>
-         <tr v-for="(todo, index) in $store.getters.getTodos" :key="index">
+         <tr v-for="(todo, index) in todos" :key="index">
            <td>{{todo.todo}}</td>
            <td>{{todo.limit}}</td>
          </tr>
@@ -31,6 +31,9 @@
 </template>
 
 <script>
+import firebase from '~/plugins/firestore'
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
@@ -38,7 +41,13 @@ export default {
       newLimit: ''
     }
   },
+  computed: {
+    ...mapGetters({ todos: 'firestoreItem/getTodos' })
+  },
   methods: {
+    // ...mapActions({
+    //   getOnSaleItems: "item/getOnSaleItems"
+    // }),
     addTodo() {
       const todo = this.newTodo
       const limit = this.newLimit
@@ -48,8 +57,8 @@ export default {
       this.newLimit = ''
     },
   },
-  created() {
-    this.$store.dispatch('firestoreItem/fetchTodos')
+  async created() {
+    this.$store.dispatch('firestoreItem/setTodosRef')
   },
 }
 </script>

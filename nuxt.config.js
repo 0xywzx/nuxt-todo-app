@@ -34,6 +34,7 @@ export default {
     { src: '~/plugins/web3.js' },
     { src: '~/plugins/ipfs.js' },
     { src: '~/plugins/localStorage.js', ssr: false },
+    '~/plugins/firestore.js',
   ],
   /*
   ** Nuxt.js dev-modules

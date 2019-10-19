@@ -1,5 +1,6 @@
 var Web3 = require('web3');
 var flibra = require('./src/abis/FLibra.json');
+var db = require ('./src/plugins/firebase.js');
 
 async function setContract() {
   var web3 = await new Web3(new Web3.providers.WebsocketProvider('ws://0.0.0.0:8546'));
@@ -8,10 +9,11 @@ async function setContract() {
     flibra.abi,
     flibra.networks[networkId].address
   );
-  
+
   flibraContract.events.PostItem({   }, function(error, event){  })
   .on('data', function(event){
       console.log(event)
+      setItemInFirebase(event)
   })
   .on('changed', function(event){
       // remove event from local database
@@ -30,6 +32,11 @@ async function setContract() {
   //   console.log("Event received", trxData);
   //   //Code from here would be run immediately when event appeared
   // });
+}
+
+async function setItemInFirebase (item) {
+  var itemRef = await db.collection('items')
+  itemRef.add(item)
 }
 
 setContract()
