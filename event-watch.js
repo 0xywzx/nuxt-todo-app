@@ -1,6 +1,23 @@
 var Web3 = require('web3');
 var flibra = require('./src/abis/FLibra.json');
-var db = require ('./src/plugins/firebase.js');
+
+var firebase = require('firebase');
+require('firebase/firestore');
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(
+    {
+      apiKey: "AIzaSyAIqQE5536C0FyUnOQS94xi0UrqM-miX-k",
+      authDomain: "nuxt-firestore-80092.firebaseapp.com",
+      databaseURL: "https://nuxt-firestore-80092.firebaseio.com",
+      projectId: "nuxt-firestore-80092",
+      storageBucket: "gs://nuxt-firestore-80092.appspot.com",
+      messagingSenderId: "247244459401",
+      appId: "1:247244459401:web:af0d3f277789fdfcfe2558"
+    }
+  )
+}
+var db = firebase.firestore();
 
 async function setContract() {
   var web3 = await new Web3(new Web3.providers.WebsocketProvider('ws://0.0.0.0:8546'));
@@ -36,7 +53,14 @@ async function setContract() {
 
 async function setItemInFirebase (item) {
   var itemRef = await db.collection('items')
-  itemRef.add(item)
+  itemRef.add({
+    id: item.returnValues.id,
+    itemName: item.returnValues.itemName,
+    price: item.returnValues.price,
+    purchaser: item.returnValues.purchaser,
+    seller: item.returnValues.seller,
+    selling: item.returnValues.selling,
+  })
 }
 
 setContract()
