@@ -1,6 +1,8 @@
-import db from '~/plugins/firestore.js'
+import firebase from '~/plugins/firebase.js'
 import {vuexfireMutations, firestoreAction } from 'vuexfire';
+import 'firebase/firestore'
 
+const db = firebase.firestore()
 const todoRef = db.collection('todos')
 
 

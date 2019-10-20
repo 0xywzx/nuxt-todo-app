@@ -15,7 +15,7 @@ if (!firebase.apps.length) {
   )
 }
 
-export default firebase.firestore();
+export default firebase;
 
 // import firebase from 'firebase'
 // import 'firebase/firestore'

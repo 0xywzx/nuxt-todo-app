@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import firebase from '~/plugins/firestore'
+import firebase from '~/plugins/firebase'
 import { mapGetters } from 'vuex'
 
 export default {
