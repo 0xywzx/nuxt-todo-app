@@ -19,7 +19,7 @@ class Registration {
     }
 
     init() {
-        this.ref = firebase.firestore().collection(this.collection).where('ES_STATE', '==', 'STAY');
+        this.ref = firebase.firestore().collection(this.collection); //.where('ES_STATE', '==', 'STAY');
         this.unsubscribe = null;
         this.unsubscribe = this.ref.onSnapshot(this._showResults.bind(this));
     }

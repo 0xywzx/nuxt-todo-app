@@ -44,6 +44,6 @@ let timeoutObj = setInterval(function() {
         console.log('Connected to ElasticSearch host %s:%s', conf.ES_HOST, conf.ES_PORT);
         clearInterval(timeoutObj);
         Search.init(esc, refReq='search_request', refRes='search_response', index='firebase_user', type='user');
-        Registration.init(esc, collection='users', index='firebase_user', type='user');
+        Registration.init(esc, collection='items', index='firebase_user', type='user');
     });
 }, 5000);

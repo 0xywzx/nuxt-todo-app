@@ -37,6 +37,7 @@
 
 <script>
 import firebase from '~/plugins/firebase'
+import 'firebase/firestore'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -44,7 +45,10 @@ export default {
     return {
       newTodo: '',
       newLimit: '',
+      items: [],
       unsubscribe: null,
+      ref_req: firebase.firestore().collection('search_request'),
+      ref_res: firebase.firestore().collection('search_response'),
     }
   },
   computed: {
@@ -63,11 +67,31 @@ export default {
       this.newLimit = ''
     },
     async search() {
-      let ref_req = await firebase.firestore().collection('search_request');
+      let query = {
+        // formで変数は変更可能にできる
+        index: 'firebase_user',
+        type: 'user',
+        size: 10,
+        from: 0,
+        q: 'user'
+      };
+      //let ref_req = await firebase.firestore().collection('search_request');
       const snap = await this.ref_req.add(query);
-      const key = snap.id;
-      this.unsubscribe = this.ref_res.doc(key).onSnapshot(this.showResults);
-    }
+      const key = await snap.id;
+      this.unsubscribe = await this.ref_res.doc(key).onSnapshot(this.showResults(snap));
+    },
+    showResults(snap) {
+      if (snap.data() == undefined ){
+        return;
+      }else{
+        this.items = [{
+          key: 0,
+          source: snap.data(),
+        }],
+        snap.ref.delete()
+        this.unsubscribe = null;
+      }
+    },
   },
   async created() {
     this.$store.dispatch('firestoreItem/setTodosRef')

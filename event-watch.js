@@ -17,9 +17,7 @@ if (!firebase.apps.length) {
     }
   )
 }
-console.log(firebase)
 var db = firebase.firestore();
-console.log(db)
 
 async function setContract() {
   var web3 = await new Web3(new Web3.providers.WebsocketProvider('ws://0.0.0.0:8546'));
@@ -31,7 +29,7 @@ async function setContract() {
 
   flibraContract.events.PostItem({   }, function(error, event){  })
   .on('data', function(event){
-      console.log(event)
+      console.log(event.returnValues)
       setItemInFirebase(event)
   })
   .on('changed', function(event){
