@@ -5,6 +5,7 @@ var firebase = require('firebase');
 require('firebase/firestore');
 
 if (!firebase.apps.length) {
+  console.log(!firebase.apps.length)
   firebase.initializeApp(
     {
       apiKey: "AIzaSyAIqQE5536C0FyUnOQS94xi0UrqM-miX-k",
