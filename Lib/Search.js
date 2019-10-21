@@ -1,6 +1,6 @@
 'use strict';
 
-const firebase = require('./firebase.js');
+const firebase = require('firebase');
 require('firebase/firestore');
 const _ = require('lodash');
 //////////////////////////////////////////////////
@@ -20,12 +20,12 @@ class Search {
         this.type = type;
     }
 
-    async init() {
+    init() {
         /*
          * subscribeをcollectionに張る
         */
-        this.refReq = await firebase.collection(this.refReq);
-        this.refRes = await firebase.collection(this.refRes);
+        this.refReq = firebase.firestore().collection(this.refReq);
+        this.refRes = firebase.firestore().collection(this.refRes);
         this.unsubscribe = null;
         this.unsubscribe = this.refReq.onSnapshot(this._showResults.bind(this));
     }

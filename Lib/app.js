@@ -11,12 +11,13 @@
   * firestoreでデータ削除が必要になったときの処理を決める
 */
 
-const firebase = require('./firebase.js');
+const firebase = require('firebase');
 require('firebase/firestore');
 const elasticsearch = require('elasticsearch');
 
 const conf = require('./config');
 //require('./lib/initFirebase');
+require('./firebase.js')
 let Search = require('./Search.js');
 let Registration = require('./Registration.js');
 

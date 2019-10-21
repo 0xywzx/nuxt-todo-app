@@ -1,6 +1,6 @@
 'use strict';
 
-const firebase = require('./firebase.js');
+const firebase = require('firebase');
 require('firebase/firestore');
 const _ = require('lodash');
 //////////////////////////////////////////////////
@@ -19,7 +19,7 @@ class Registration {
     }
 
     init() {
-        this.ref = firebase.collection(this.collection).where('ES_STATE', '==', 'STAY');
+        this.ref = firebase.firestore().collection(this.collection).where('ES_STATE', '==', 'STAY');
         this.unsubscribe = null;
         this.unsubscribe = this.ref.onSnapshot(this._showResults.bind(this));
     }
@@ -62,7 +62,7 @@ class Registration {
          * Elasticsearchにデータを更新し終わったら、firestoreのステータス管理fieldに
          * ステータス変更を書き込みに行く関数
         */
-        return firebase.collection(this.collection).doc(doc.id).update({
+        return firebase.firestore().collection(this.collection).doc(doc.id).update({
             'ES_STATE': 'DONE',
         })
         .then(function() {

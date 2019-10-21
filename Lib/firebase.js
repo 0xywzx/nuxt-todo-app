@@ -2,7 +2,6 @@ const firebase = require('firebase');
 require('firebase/firestore');
 
 if (!firebase.apps.length) {
-  console.log(!firebase.apps.length)
   firebase.initializeApp(
     {
       apiKey: "AIzaSyAIqQE5536C0FyUnOQS94xi0UrqM-miX-k",
@@ -13,7 +12,7 @@ if (!firebase.apps.length) {
       messagingSenderId: "247244459401",
       appId: "1:247244459401:web:af0d3f277789fdfcfe2558"
     }
-  ).firestore()
+  )
 };
 
 //export default firebase;
