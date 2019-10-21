@@ -26,6 +26,11 @@
           add
         </a>
       </p>
+      <hr />
+      <p>Elasticsearch</p>
+      <el-button class="button" @click="search">Search</el-button>
+
+
     </div>
   </div>
 </template>
@@ -38,7 +43,8 @@ export default {
   data() {
     return {
       newTodo: '',
-      newLimit: ''
+      newLimit: '',
+      unsubscribe: null,
     }
   },
   computed: {
@@ -56,6 +62,12 @@ export default {
       this.newTodo = ''
       this.newLimit = ''
     },
+    async search() {
+      let ref_req = await firebase.firestore().collection('search_request');
+      const snap = await this.ref_req.add(query);
+      const key = snap.id;
+      this.unsubscribe = this.ref_res.doc(key).onSnapshot(this.showResults);
+    }
   },
   async created() {
     this.$store.dispatch('firestoreItem/setTodosRef')
