@@ -43,7 +43,7 @@ let timeoutObj = setInterval(function() {
     esc.ping().then(function() {
         console.log('Connected to ElasticSearch host %s:%s', conf.ES_HOST, conf.ES_PORT);
         clearInterval(timeoutObj);
-        Search.init(esc, refReq='search_request', refRes='search_response', index='firebase_user', type='user');
-        Registration.init(esc, collection='items', index='firebase_user', type='user');
+        Search.init(esc, refReq='search_request', refRes='search_response', index='flibra', type='item');
+        Registration.init(esc, collection='items', index='flibra', type='item');
     });
 }, 5000);

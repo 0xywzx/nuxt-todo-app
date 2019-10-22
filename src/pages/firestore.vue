@@ -72,8 +72,8 @@ export default {
     async search() {
       let query = {
         // formで変数は変更可能にできる
-        index: 'firebase_user',
-        type: 'user',
+        index: 'flibra',
+        type: 'item',
         size: 10,
         from: 0,
         q: 'user'
