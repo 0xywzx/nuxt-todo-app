@@ -29,9 +29,9 @@ class Registration {
             const sendData = {
                 index: this.index,
                 type: this.type,
-                id: doc.id,
+                id: doc.data().id,
                 body: {
-                    id: doc.data().id,
+                    itemId: doc.data().id,
                     itemName: doc.data().itemName,
                     price: doc.data().price,
                     purchaser: doc.data().purchaser,
