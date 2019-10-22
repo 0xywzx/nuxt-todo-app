@@ -20,6 +20,7 @@ if (!firebase.apps.length) {
 var db = firebase.firestore();
 
 async function setContract() {
+  console.log(Boolean(""))
   var web3 = await new Web3(new Web3.providers.WebsocketProvider('ws://0.0.0.0:8546'));
   let networkId = await web3.eth.net.getId();
   let flibraContract = await new web3.eth.Contract(
@@ -82,7 +83,7 @@ async function setItemInFirebase (item) {
 
 async function changeItemStatusInFirebase (item) {
   await db.collection('items').doc(item.returnValues.id).update({
-    'selling': item.returnValues.selling,
+    'selling': Boolean(""),
     'purchaser': item.returnValues.purchaser,
   })
   .then(function() {
