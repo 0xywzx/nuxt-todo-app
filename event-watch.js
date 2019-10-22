@@ -67,7 +67,7 @@ async function setContract() {
 
 async function setItemInFirebase (item) {
   var itemRef = await db.collection('items').doc(item.returnValues.id)
-  itemRef.add({
+  .set({
     itemId: item.returnValues.id,  // あとでItemIdに変更する
     itemName: item.returnValues.itemName,
     price: item.returnValues.price,
@@ -76,7 +76,7 @@ async function setItemInFirebase (item) {
     selling: item.returnValues.selling,
   })
   .then(function() {
-    console.log('Added item info in firestore');
+    console.log('Set item info in firestore');
   })
 }
 
