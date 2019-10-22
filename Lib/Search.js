@@ -37,11 +37,15 @@ class Search {
         snap.forEach((doc) => {
             let { from, q, size } = doc.data();
             let query = {
-                from,
                 index: this.index,
-                q,
-                size,
                 type: this.type,
+                body: {
+                  query: {
+                    match_all: {}
+                  },
+                },
+                from,
+                size,
             }
             this._searchWithElasticsearch(doc, query)
         })
