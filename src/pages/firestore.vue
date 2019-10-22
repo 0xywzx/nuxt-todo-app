@@ -29,7 +29,10 @@
       <hr />
       <p>Elasticsearch</p>
       <el-button class="button" @click="search">Search</el-button>
-
+      <div  v-for="item in items">
+        <span>ID:{{ item.source.id }} </span>
+        <span>NAME:{{ item.source.itemName }}</span>
+      </div>
 
     </div>
   </div>
@@ -78,20 +81,18 @@ export default {
       //let ref_req = await firebase.firestore().collection('search_request');
       const snap = await this.ref_req.add(query);
       const key = await snap.id;
-      console.log(key)
-      this.unsubscribe = await this.ref_res.doc(key).onSnapshot(this.showResults(snap));
+      this.unsubscribe = await this.ref_res.doc(key).onSnapshot(this.showResults);
     },
-    showResults(snap) {
-      console.log(snap)
-      console.log(snap.data())
+    async showResults(snap) {
       if (snap.data() == undefined ){
         return;
       }else{
-        this.items = [{
-          key: 0,
-          source: snap.data(),
-        }],
-        snap.ref.delete()
+        this.items = snap.data();
+        //  [{
+        //   key: 0,
+        //   source: snap.data(),
+        // }],
+        await snap.ref.delete()
         this.unsubscribe = null;
       }
     },
