@@ -27,7 +27,10 @@ async function setContract() {
     flibra.networks[networkId].address
   );
 
-  flibraContract.events.PostItem({   }, function(error, event){  })
+  console.log('Watching event')
+
+  // --------- PostItem event ---------
+  flibraContract.events.PostItem({ }, function(error, event){  })
   .on('data', function(event){
       console.log(event.returnValues)
       setItemInFirebase(event)
@@ -37,6 +40,17 @@ async function setContract() {
   })
   .on('error', console.error);
     
+  // --------- ItemPurchased event ---------
+  flibraContract.events.ItemPurchased({ }, function(error, event){  })
+  .on('data', function(event){
+      console.log('ItemPurchased event detected', event.returnValues)
+      changeItemStatusInFirebase(event)
+  })
+  .on('changed', function(event){
+      // remove event from local database
+  })
+  .on('error', console.error);
+
   // //subscribe
   // let web3Provider = await new Web3.providers.WebsocketProvider("ws://0.0.0.0:8546");
   // var web3Obj = await new Web3(web3Provider);
@@ -52,15 +66,38 @@ async function setContract() {
 }
 
 async function setItemInFirebase (item) {
-  var itemRef = await db.collection('items')
+  var itemRef = await db.collection('items').doc(item.returnValues.id)
   itemRef.add({
-    id: item.returnValues.id,
+    itemId: item.returnValues.id,  // あとでItemIdに変更する
     itemName: item.returnValues.itemName,
     price: item.returnValues.price,
     purchaser: item.returnValues.purchaser,
     seller: item.returnValues.seller,
     selling: item.returnValues.selling,
   })
+  .then(function() {
+    console.log('Added item info in firestore');
+  })
+}
+
+async function changeItemStatusInFirebase (item) {
+  await db.collection('items').doc(item.returnValues.id).update({
+    'selling': item.returnValues.selling,
+    'purchaser': item.returnValues.purchaser,
+  })
+  .then(function() {
+    console.log('item selling status updated in firestore');
+  })
+
+  // var itemRef = await db.collection('items')
+  // itemRef.add({
+  //   id: item.returnValues.id,
+  //   itemName: item.returnValues.itemName,
+  //   price: item.returnValues.price,
+  //   purchaser: item.returnValues.purchaser,
+  //   seller: item.returnValues.seller,
+  //   selling: item.returnValues.selling,
+  // })
 }
 
 setContract()
