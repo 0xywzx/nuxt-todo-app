@@ -68,7 +68,7 @@ async function setContract() {
 async function setItemInFirebase (item) {
   var itemRef = await db.collection('items').doc(item.returnValues.id)
   .set({
-    itemId: item.returnValues.id,  // あとでItemIdに変更する
+    itemId: item.returnValues.id,  
     itemName: item.returnValues.itemName,
     price: item.returnValues.price,
     purchaser: item.returnValues.purchaser,
