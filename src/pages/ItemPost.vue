@@ -52,10 +52,10 @@ export default {
         }
     },
     async postItem() {
-      let result = await this.$ipfs.add(this.form.buffer);
+      //let result = await this.$ipfs.add(this.form.buffer);  result[0].hash,
       const address = await this.$store.state.user.etherAddress
       const pk = await this.$store.state.user.pk
-      const functionAbi = await this.$flibraContract.methods.setItem(this.form.name, result[0].hash, this.form.price).encodeABI()
+      const functionAbi = await this.$flibraContract.methods.setItem(this.form.name, "QmSYuVwLoxKWaUWA9EpWZuPZDMJ9dVqpH4mGeyF82jNABD" this.form.price).encodeABI()
       await sendTx(this, address, pk, functionAbi)
     }
   },
