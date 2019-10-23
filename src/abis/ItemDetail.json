@@ -1,0 +1,246 @@
+{
+  "bytecode": "",
+  "abi": [
+    [
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "_itemName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_itemPhoto",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "_itemDetailText",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_category",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_subCategory",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_itemCondition",
+            "type": "string"
+          }
+        ],
+        "name": "editItem",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "item",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "itemName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "itemPhoto",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "itemDetailText",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "subCategory",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "itemCondition",
+            "type": "string"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [],
+        "name": "getItem",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "itemName",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "itemPhoto",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "itemDetailText",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "category",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "subCategory",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "itemCondition",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct ItemDetail.Item",
+            "name": "",
+            "type": "tuple"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "_itemName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_itemPhoto",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "_itemDetailText",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_category",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_subCategory",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_itemCondition",
+            "type": "string"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "_itemName",
+            "type": "string"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "_itemPhoto",
+            "type": "string"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "_price",
+            "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "_itemDetailText",
+            "type": "string"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "_category",
+            "type": "string"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "_subCategory",
+            "type": "string"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "_itemCondition",
+            "type": "string"
+          }
+        ],
+        "name": "EditItem",
+        "type": "event"
+      }
+    ]
+  ]
+}
