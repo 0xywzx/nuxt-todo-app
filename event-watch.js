@@ -51,23 +51,10 @@ async function setContract() {
       // remove event from local database
   })
   .on('error', console.error);
-
-  // //subscribe
-  // let web3Provider = await new Web3.providers.WebsocketProvider("ws://0.0.0.0:8546");
-  // var web3Obj = await new Web3(web3Provider);
-  // var subscription = web3Obj.eth.subscribe('logs', {
-  //     address: '0x327Aa8e037bBC4C3ddD4591ec420C7fECe9d414D', //Smart contract address
-  //     //topics: ['0x12345'] //topics for events
-  // }, function(error, result){
-  //     if (error) console.log(error);
-  // }).on("data", function(trxData){
-  //   console.log("Event received", trxData);
-  //   //Code from here would be run immediately when event appeared
-  // });
 }
 
 async function setItemInFirebase (item) {
-  var itemRef = await db.collection('items').doc(item.returnValues.id)
+  await db.collection('items').doc(item.returnValues.id)
   .set({
     itemId: item.returnValues.id,  
     itemName: item.returnValues.itemName,
@@ -89,16 +76,6 @@ async function changeItemStatusInFirebase (item) {
   .then(function() {
     console.log('item selling status updated in firestore');
   })
-
-  // var itemRef = await db.collection('items')
-  // itemRef.add({
-  //   id: item.returnValues.id,
-  //   itemName: item.returnValues.itemName,
-  //   price: item.returnValues.price,
-  //   purchaser: item.returnValues.purchaser,
-  //   seller: item.returnValues.seller,
-  //   selling: item.returnValues.selling,
-  // })
 }
 
 setContract()
