@@ -61,7 +61,7 @@ contract FLibra {
   } 
 
   // -------- Post a Item --------
-  function setItem(address _itemDetailContract) public {
+  function postItem(address _itemDetailContract) public {
     itemId = itemId + 1;
     allItems.push(Item(itemId, _itemDetailContract, msg.sender, true, temporaryPurchaser));
     myItemId[msg.sender].push(itemId);

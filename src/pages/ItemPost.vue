@@ -20,6 +20,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
+import ItemDetal from "../abis/ItemDetail.json";
 import sendTx from "~/plugins/sendTx.js"
 
 export default {
@@ -62,7 +63,30 @@ export default {
       //let result = await this.$ipfs.add(this.form.buffer);  result[0].hash,
       const address = await this.$store.state.user.etherAddress
       const pk = await this.$store.state.user.pk
-      
+      var itemContract = new this.$web3.eth.Contract(ItemDetal.abi)
+
+      await itemContract.deploy({
+        data: bytecode,
+        arguments:["sample1", "QmSYuVwLoxKWaUWA9EpWZuPZDMJ9dVqpH4mGeyF82jNABD", 10, "Detail", "Categiry1", "sub category 1", "item condition1"]
+      })
+      .send({
+        from: address,
+        gas: 1500000,
+        gasPrice: '30000000000000',
+      }).on('error', (error) => {
+          console.log("Error: ", error);
+      }).on('transactionHash', (transactionHash) => {
+          console.log("TxHash: ", transactionHash);
+      }).on('receipt', (receipt) => {
+        console.log("Address: ", receipt.contractAddress)  
+        const functionAbi = await this.$flibraContract.methods.postItem(receipt.contractAddress).encodeABI()
+        await sendTx(this, address, pk, functionAbi)
+
+      }).catch(function(error) {
+          console.log(error);
+      });
+
+
       const functionAbi = await this.$flibraContract.methods.setItem(this.form.name, "QmSYuVwLoxKWaUWA9EpWZuPZDMJ9dVqpH4mGeyF82jNABD", this.form.price).encodeABI()
       await sendTx(this, address, pk, functionAbi)
     }
