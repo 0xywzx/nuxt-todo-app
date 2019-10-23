@@ -45,7 +45,7 @@ contract FLibra {
   //events
   event PostItem(uint256 id, address itemDetailContract, address seller, bool selling, address purchaser);
   event ItemPurchased(uint256 id, address purchaser);
-  event EditItem(uint256 id, string itemName, uint256 price);
+  // EditItem(uint256 id, string itemName, uint256 price);
   event UserInfoCreated(address userAddress, string userName, string userIcon);
   event WriteReviewToSeller(uint256 itemId, uint256 star, string text);
   event WriteReviewToPurchaser(uint256 itemId, uint256 star, string text);
@@ -80,14 +80,14 @@ contract FLibra {
   }
 
   // -------- Edit a Item --------
-  function editItem(uint256 _id, string memory _itemName, uint256 _price) public {
-    require(allItems[_id].seller == msg.sender);
-    Item memory _item = allItems[_id];
-    _item.itemName = _itemName;
-    _item.price = _price;
-    allItems[_id] = _item;
-    emit EditItem(_id, _itemName, _price);
-  }
+  // function editItem(uint256 _id, string memory _itemName, uint256 _price) public {
+  //   require(allItems[_id].seller == msg.sender);
+  //   Item memory _item = allItems[_id];
+  //   _item.itemName = _itemName;
+  //   _item.price = _price;
+  //   allItems[_id] = _item;
+  //   emit EditItem(_id, _itemName, _price);
+  // }
 
   // -------- Write Review to Seller --------
   function writeReviewToSeller(uint256 _id, uint256 _star, string memory _text) public {
