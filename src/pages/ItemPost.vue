@@ -20,7 +20,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
-import ItemDetal from "../abis/ItemDetail.json";
+import ItemDetail from "../abis/ItemDetail.json";
 import sendTx from "~/plugins/sendTx.js";
 import Common from "ethereumjs-common";
 
@@ -76,10 +76,10 @@ export default {
         },
         'petersburg',
       )
-      var itemContract = new this.$web3.eth.Contract(ItemDetal.abi)
+      var itemContract = new this.$web3.eth.Contract(ItemDetail.abi)
 
       const hexdata = await itemContract.deploy({
-        data: ItemDetal.bytecode,
+        data: ItemDetail.bytecode,
         arguments:["sample1", "QmSYuVwLoxKWaUWA9EpWZuPZDMJ9dVqpH4mGeyF82jNABD", 10, "Detail", "Categiry1", "subcategory1", "itemcondition1"]
       }).encodeABI()
 
@@ -109,6 +109,7 @@ export default {
       var rawdata = await '0x' + transaction.serialize().toString('hex');
       console.log(rawdata)
 
+      let app = this
       let flibraContract = this.$flibraContract
 
       await this.$web3.eth.sendSignedTransaction(rawdata)
@@ -118,7 +119,7 @@ export default {
       .on('receipt', async function(receipt){
         console.log(['transferToStaging Receipt:', receipt]);
         const functionAbi = await flibraContract.methods.postItem(receipt.contractAddress).encodeABI()
-        await sendTx(this, address, pk, functionAbi)
+        await sendTx(app, address, pk, functionAbi)
       })
       .on('error', console.error);
     }

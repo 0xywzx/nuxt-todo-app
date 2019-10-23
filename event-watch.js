@@ -1,5 +1,6 @@
 var Web3 = require('web3');
 var flibra = require('./src/abis/FLibra.json');
+var itemDetail = require('./src/abis/ItemDetail.json');
 
 var firebase = require('firebase');
 require('firebase/firestore');
@@ -20,7 +21,6 @@ if (!firebase.apps.length) {
 var db = firebase.firestore();
 
 async function setContract() {
-  console.log(Boolean(""))
   var web3 = await new Web3(new Web3.providers.WebsocketProvider('ws://0.0.0.0:8546'));
   let networkId = await web3.eth.net.getId();
   let flibraContract = await new web3.eth.Contract(
@@ -54,14 +54,25 @@ async function setContract() {
 }
 
 async function setItemInFirebase (item) {
+  let itemDetailContract = await new web3.eth.Contract(
+    itemDetail.abi,
+    item.returnValues.itemDetailContract
+  );
+  let itemDetailResult = await itemDetailContract.methods.call()
   await db.collection('items').doc(item.returnValues.id)
   .set({
-    itemId: item.returnValues.id,  
-    itemName: item.returnValues.itemName,
-    price: item.returnValues.price,
+    itemId: item.returnValues.id, 
+    itemDetailContract: item.returnValues.itemDetailContract,
     purchaser: item.returnValues.purchaser,
     seller: item.returnValues.seller,
     selling: item.returnValues.selling,
+    itemName: itemDetailResult.itemName,
+    itemPhoto: itemDetailResult.itemPhoto,
+    price: itemDetailResult.price,
+    itemDetailText: itemDetailResult.itemDetailText,
+    category: itemDetailResult.category,
+    subCategory: itemDetailResult.subCategory,
+    itemCondition: itemDetailResult.itemCondition,
   })
   .then(function() {
     console.log('Set item info in firestore');
