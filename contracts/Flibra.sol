@@ -18,9 +18,7 @@ contract FLibra {
   // structs
   struct Item {
     uint256 id;
-    string itemName;
-    string itemPhoto;
-    uint256 price;
+    address itemDetailContract;
     address seller;
     bool selling;
     address purchaser;
@@ -45,7 +43,7 @@ contract FLibra {
   }
 
   //events
-  event PostItem(uint256 id, string itemName, uint256 price, address seller, bool selling, address purchaser);
+  event PostItem(uint256 id, address itemDetailContract, address seller, bool selling, address purchaser);
   event ItemPurchased(uint256 id, address purchaser);
   event EditItem(uint256 id, string itemName, uint256 price);
   event UserInfoCreated(address userAddress, string userName, string userIcon);
@@ -63,12 +61,12 @@ contract FLibra {
   } 
 
   // -------- Post a Item --------
-  function setItem(string memory _itemName, string memory _itemPhoto, uint256 _price) public {
-    allItems.push(Item(itemId, _itemName, _itemPhoto, _price, msg.sender, true, temporaryPurchaser));
+  function setItem(address _itemDetailContract) public {
+    itemId = itemId + 1;
+    allItems.push(Item(itemId, _itemDetailContract, msg.sender, true, temporaryPurchaser));
     myItemId[msg.sender].push(itemId);
     //onSaleItems[allItems[itemId].selling].push(allItems[itemId].id);
-    emit PostItem(itemId, _itemName, _price, msg.sender, true, temporaryPurchaser);
-    itemId = itemId + 1;
+    emit PostItem(itemId, _itemDetailContract, msg.sender, true, temporaryPurchaser);
   }
 
   // -------- Purchase a Item --------
