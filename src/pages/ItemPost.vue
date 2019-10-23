@@ -21,7 +21,9 @@
 <script>
 import { mapMutations, mapActions } from 'vuex'
 import ItemDetal from "../abis/ItemDetail.json";
-import sendTx from "~/plugins/sendTx.js"
+import sendTx from "~/plugins/sendTx.js";
+import Common from "ethereumjs-common";
+
 
 export default {
   data: function() {
@@ -63,32 +65,62 @@ export default {
       //let result = await this.$ipfs.add(this.form.buffer);  result[0].hash,
       const address = await this.$store.state.user.etherAddress
       const pk = await this.$store.state.user.pk
+
+      // ------------- あとでplugin化する、データのフローを意識する -------------
+      const customCommon = Common.forCustomChain(
+        'mainnet',
+        {
+          name: 'privatechain',
+          networkId: 1515,
+          chainId: 1515,
+        },
+        'petersburg',
+      )
       var itemContract = new this.$web3.eth.Contract(ItemDetal.abi)
 
-      await itemContract.deploy({
-        data: bytecode,
-        arguments:["sample1", "QmSYuVwLoxKWaUWA9EpWZuPZDMJ9dVqpH4mGeyF82jNABD", 10, "Detail", "Categiry1", "sub category 1", "item condition1"]
+      const hexdata = await itemContract.deploy({
+        data: ItemDetal.bytecode,
+        arguments:["sample1", "QmSYuVwLoxKWaUWA9EpWZuPZDMJ9dVqpH4mGeyF82jNABD", 10, "Detail", "Categiry1", "subcategory1", "itemcondition1"]
+      }).encodeABI()
+
+      const nonce = await this.$web3.eth.getTransactionCount(address)
+
+      const nonceHex = await this.$web3.utils.toHex(nonce);
+      const gasPriceHex = await this.$web3.utils.toHex(0);
+      const gasLimitHex = await this.$web3.utils.toHex(5000000);
+
+      var details = await {
+        nonce : nonceHex,
+        gasPrice : gasPriceHex,
+        gasLimit: gasLimitHex,
+        from : address,
+        data : hexdata,
+      };
+      console.log(details)
+
+      const EthereumTx = require('ethereumjs-tx').Transaction;
+      const transaction = await new EthereumTx(details, { common: customCommon },);
+
+      const privatekey = await Buffer.from(pk.slice(2), 'hex', )
+
+      await transaction.sign(privatekey)
+      console.log(transaction)
+
+      var rawdata = await '0x' + transaction.serialize().toString('hex');
+      console.log(rawdata)
+
+      let flibraContract = this.$flibraContract
+
+      await this.$web3.eth.sendSignedTransaction(rawdata)
+      .on('transactionHash', function(hash){
+        console.log(['transferToStaging Trx Hash:' + hash]);
       })
-      .send({
-        from: address,
-        gas: 1500000,
-        gasPrice: '30000000000000',
-      }).on('error', (error) => {
-          console.log("Error: ", error);
-      }).on('transactionHash', (transactionHash) => {
-          console.log("TxHash: ", transactionHash);
-      }).on('receipt', (receipt) => {
-        console.log("Address: ", receipt.contractAddress)  
-        const functionAbi = await this.$flibraContract.methods.postItem(receipt.contractAddress).encodeABI()
+      .on('receipt', async function(receipt){
+        console.log(['transferToStaging Receipt:', receipt]);
+        const functionAbi = await flibraContract.methods.postItem(receipt.contractAddress).encodeABI()
         await sendTx(this, address, pk, functionAbi)
-
-      }).catch(function(error) {
-          console.log(error);
-      });
-
-
-      const functionAbi = await this.$flibraContract.methods.setItem(this.form.name, "QmSYuVwLoxKWaUWA9EpWZuPZDMJ9dVqpH4mGeyF82jNABD", this.form.price).encodeABI()
-      await sendTx(this, address, pk, functionAbi)
+      })
+      .on('error', console.error);
     }
   },
   async mounted() {

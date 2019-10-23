@@ -2,14 +2,14 @@ import Common from "ethereumjs-common"
 
 export default async function(app, address, pk, functionAbi) {
   const EthereumTx = require('ethereumjs-tx').Transaction
-  const nonce = await app.$web3.eth.getTransactionCount(address)
+  const nonce = await $web3.eth.getTransactionCount(address)
 
   var details = await {
       nonce : nonce,
       gasPrice : 0,
       gasLimit: 500000,
       from : address,
-      to : app.$flibraContract.options.address, //app.$contract.options.address, 
+      to : $flibraContract.options.address, //app.$contract.options.address, 
       data : functionAbi,
   }
   const customCommon = await Common.forCustomChain(
@@ -26,7 +26,7 @@ export default async function(app, address, pk, functionAbi) {
   await transaction.sign(Buffer.from(pk.slice(2),'hex',))
   
   var rawdata = await '0x' + transaction.serialize().toString('hex');
-  await app.$web3.eth.sendSignedTransaction(rawdata)
+  await $web3.eth.sendSignedTransaction(rawdata)
   .on('transactionHash', function(hash){
       console.log(['transferToStaging Trx Hash:' + hash]);
   })
