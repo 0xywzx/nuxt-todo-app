@@ -54,11 +54,14 @@ async function setContract() {
 }
 
 async function setItemInFirebase (item) {
-  let itemDetailContract = await new web3.eth.Contract(
+  var web3 = await new Web3(new Web3.providers.WebsocketProvider('ws://0.0.0.0:8546'));
+  let itemContract = await new web3.eth.Contract(
     itemDetail.abi,
     item.returnValues.itemDetailContract
   );
-  let itemDetailResult = await itemDetailContract.methods.call()
+  console.log(item.returnValues.itemDetailContract)
+  console.log(itemDetail.abi)
+  let itemDetailResult = await itemContract.methods.getItem().call()
   await db.collection('items').doc(item.returnValues.id)
   .set({
     itemId: item.returnValues.id, 
