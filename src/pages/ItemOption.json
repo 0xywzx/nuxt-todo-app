@@ -1,0 +1,38 @@
+{
+  "categoryList": [{
+    "value": "1",
+    "label": "レディース"
+  }, {
+    "value": "2",
+    "label": "メンズ"
+  }, {
+    "value": "3",
+    "label": "ベビー・キッズ"
+  }, {
+    "value": "4",
+    "label": "インテリア・住まい・小物"
+  }, {
+    "value": "5",
+    "label": "おもちゃ・ホビー・グッズ"
+  }],
+  "subCategoryList1": [{
+    "value": "1-1",
+    "label": "すべて"
+  }, {
+    "value": "1-2",
+    "label": "Tシャツ/カットソー（半袖/袖なし）"
+  }, {
+    "value": "1-3",
+    "label": "Tシャツ/カットソー（半袖/袖あり）"
+  }],
+  "itemConditionList": [{
+    "value": "1",
+    "label": "新品同様"
+  }, {
+    "value": "2",
+    "label": "普通"
+  }, {
+    "value": "3",
+    "label": "悪い"
+  }]
+}

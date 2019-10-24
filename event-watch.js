@@ -59,8 +59,6 @@ async function setItemInFirebase (item) {
     itemDetail.abi,
     item.returnValues.itemDetailContract
   );
-  console.log(item.returnValues.itemDetailContract)
-  console.log(itemDetail.abi)
   let itemDetailResult = await itemContract.methods.getItem().call()
   await db.collection('items').doc(item.returnValues.id)
   .set({

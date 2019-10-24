@@ -31,12 +31,18 @@ class Registration {
                 type: this.type,
                 id: doc.data().itemId,
                 body: {
-                    itemId: doc.data().itemId,
-                    itemName: doc.data().itemName,
-                    price: doc.data().price,
+                    itemId: doc.data().itemId, 
+                    itemDetailContract: doc.data().itemDetailContract,
                     purchaser: doc.data().purchaser,
                     seller: doc.data().seller,
                     selling: doc.data().selling,
+                    itemName: doc.data().itemName,
+                    itemPhoto: doc.data().itemPhoto,
+                    price: doc.data().price,
+                    itemDetailText: doc.data().itemDetailText,
+                    category: doc.data().category,
+                    subCategory: doc.data().subCategory,
+                    itemCondition: doc.data().itemCondition,
                 },  // bodyに何を送るかは別途考える。index, type, collectionはclassの外で定義出来るようにしたので、これも切り出したい
             }
             this._sendDataToElasticsearch(sendData)

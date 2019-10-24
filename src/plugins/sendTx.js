@@ -7,7 +7,7 @@ export default async function(app, address, pk, functionAbi) {
   var details = await {
       nonce : nonce,
       gasPrice : 0,
-      gasLimit: 500000,
+      gasLimit: 50000,
       from : address,
       to : app.$flibraContract.options.address, //app.$contract.options.address, 
       data : functionAbi,
@@ -32,6 +32,7 @@ export default async function(app, address, pk, functionAbi) {
   })
   .on('receipt', function(receipt){
       console.log(['transferToStaging Receipt:', receipt]);
+      return receipt;
   })
   .on('error', function(error) {console.log(error)});
 }

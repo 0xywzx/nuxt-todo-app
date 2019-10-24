@@ -16,10 +16,16 @@ export default async function({ store }, inject) {
     flibra.networks[networkId].address
   )
   //console.log(contract)
-
+  const web3ws = await new Web3(new Web3.providers.WebsocketProvider('ws://0.0.0.0:8546'));
+  let flibraContractWS = await new web3ws.eth.Contract(
+    flibra.abi,
+    flibra.networks[networkId].address
+  )
+  
   inject('web3',web3)
   inject('contract',contract)
   inject('flibraContract', flibraContract)
+  inject('flibraContractWS', flibraContractWS)
 
   const privateKeyEther = "8aaf051fe6fb9c839481f770407760b4998916c276adaf6e04dfb4d7e81ee88c"
   const encryptPrivateKey = await web3.eth.accounts.encrypt(privateKeyEther, 'test!')
