@@ -12,14 +12,18 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.6.0",
+    "JQDeferred": "~1.9.1",
     "bip39": "^2.5.0",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
+    "colors": "~0.6.2",
     "dotenv": "6.2.0",
+    "elasticsearch": "^15.0.0",
     "element-ui": "^2.12.0",
     "ethereumjs-tx": "^2.1.0",
     "ethereumjs-wallet": "^0.6.0",
     "firebase": "^7.2.1",
+    "firebase-admin": "^5.12.1",
     "ipfs-http-client": "^38.2.0",
     "keythereum": "^1.0.3",
     "nuxt": "^2.0.0",
@@ -29,11 +33,7 @@
     "truffle-hdwallet-provider-privkey": "1.0.3",
     "vuex-persistedstate": "^2.5.4",
     "vuexfire": "^3.2.0-alpha.0",
-    "web3": "1.0.0-beta.46",
-    "JQDeferred": "~1.9.1",
-    "colors": "~0.6.2",
-    "elasticsearch": "^15.0.0",
-    "firebase-admin": "^5.12.1"
+    "web3": "^1.2.1"
   },
   "devDependencies": {}
 }

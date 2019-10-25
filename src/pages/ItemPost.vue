@@ -54,6 +54,7 @@
 <script>
 import { mapMutations, mapActions } from 'vuex'
 import ItemDetail from "../abis/ItemDetail.json";
+import flibra from "../abis/Flibra.json";
 import sendTx from "~/plugins/sendTx.js";
 import Common from "ethereumjs-common";
 import itemOption from "./itemOption.json"
@@ -109,6 +110,11 @@ export default {
       //let result = await this.$ipfs.add(this.form.buffer);  result[0].hash,
       const address = await this.$store.state.user.etherAddress
       const pk = await this.$store.state.user.pk
+      await this.$web3.eth.accounts.wallet.add({
+        privateKey: pk,
+        address: address 
+      });
+      this.$web3.eth.defaultAccount = await address;
 
       // ------------- あとでplugin化する、データのフローを意識する -------------
       const customCommon = Common.forCustomChain(
@@ -155,7 +161,10 @@ export default {
 
       let app = this;
       let web3 = this.$web3
-      let flibraContract = this.$flibraContract;
+      let flibraContract = await new this.$web3.eth.Contract(
+        flibra.abi,
+        flibra.networks[1515].address
+      )
       let flibraContractWS = this.$flibraContractWS;
       let ref_item = await firebase.firestore().collection('items');
 
@@ -163,54 +172,55 @@ export default {
       .on('transactionHash', function(hash){
         console.log(['transferToStaging Trx Hash:' + hash]);
       })
-      .on('confirmation', function(confirmationNumber, receipt){
-      })
       .on('receipt', async function(receipt){
         // いい感じにする 
-        
+
         console.log(['transferToStaging Receipt:', receipt]);
-        const functionAbi = await flibraContract.methods.postItem(receipt.contractAddress).send({from: address})
+
+        const gasPrice = await web3.eth.getGasPrice();
+        const gasEstimate = await flibraContract.methods.postItem(receipt.contractAddress).estimateGas({ from: web3.eth.defaultAccount });
+
+        //console.log(web3.eth.defaultAccount)
+        const functionAbi = await flibraContract.methods.postItem(receipt.contractAddress).send({ 
+          from: web3.eth.defaultAccount, 
+          gas: gasEstimate,
+          gasPrice: gasPrice,
+        })
         .on('transactionHash', function(hash){
-          console.log(hash)
+            console.log(hash)
         })
-        .on('confirmation', function(confirmationNumber, receipt){
-        })
-        .on('receipt', function(receipt){
+        .on('receipt', async function(receipt){
           console.log(receipt)
-        }) 
-        
-        // encodeABI()
-        // const result = await sendTx(app, address, pk, functionAbi)
 
         // itemのコントラクトを作成する
-        // let itemContract = await new web3.eth.Contract(
-        //   ItemDetail.abi,
-        //   receipt.contractAddress
-        // );
-        // let itemDetailResult = await itemContract.methods.getItem().call()
 
-        // flibraContractWS.events.ItemPurchased({ }, function(error, event){  })
-        // .on('data', function(event){
-        //     console.log('ItemPurchased event detected', event.returnValues)
-        //     // firebaseに保存
-        //     ref_item.doc(item.returnValues.id)
-        //     .set({
-        //       itemId: item.returnValues.id, 
-        //       itemDetailContract: item.returnValues.itemDetailContract,
-        //       purchaser: item.returnValues.purchaser,
-        //       seller: item.returnValues.seller,
-        //       selling: item.returnValues.selling,
-        //       itemName: itemDetailResult.itemName,
-        //       itemPhoto: itemDetailResult.itemPhoto,
-        //       price: itemDetailResult.price,
-        //       itemDetailText: itemDetailResult.itemDetailText,
-        //       category: itemDetailResult.category,
-        //       subCategory: itemDetailResult.subCategory,
-        //       itemCondition: itemDetailResult.itemCondition,
-        //     })
+          let itemContract = await new web3.eth.Contract(
+            ItemDetail.abi,
+            receipt.events.PostItem.returnValues.itemDetailContract
+          );
+          let itemDetailResult = await itemContract.methods.getItem().call()
 
-        // })
-        // .on('error', console.error);
+          await ref_item.doc(receipt.events.PostItem.returnValues.id)
+            .set({
+              itemId: receipt.events.PostItem.returnValues.id, 
+              itemDetailContract: receipt.events.PostItem.returnValues.itemDetailContract,
+              purchaser: receipt.events.PostItem.returnValues.purchaser,
+              seller: receipt.events.PostItem.returnValues.seller,
+              selling: receipt.events.PostItem.returnValues.selling,
+              itemName: itemDetailResult.itemName,
+              itemPhoto: itemDetailResult.itemPhoto,
+              price: itemDetailResult.price,
+              itemDetailText: itemDetailResult.itemDetailText,
+              category: itemDetailResult.category,
+              subCategory: itemDetailResult.subCategory,
+              itemCondition: itemDetailResult.itemCondition,
+            })
+        })
+        .on('error', console.error);
+
+        // .encodeABI()
+        // const result = await sendTx(app, address, pk, functionAbi)
+
       })
       .on('error', console.error);
     },

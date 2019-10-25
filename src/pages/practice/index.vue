@@ -51,10 +51,13 @@ export default {
     }),
     async addTodo(e) {
       //this.addTodoChain(e.target.value, account, pk )
-      const account = await this.$store.state.user.etherAddress
-      const pk = await this.$store.state.user.pk
-      const funcionAbi = await this.$contract.methods.createTask(e.target.value).encodeABI()
-      let result = await sendTx(this, account, pk, funcionAbi)
+      // const account = await this.$store.state.user.etherAddress
+      // const pk = await this.$store.state.user.pk
+      // const funcionAbi = await this.$contract.methods.createTask(e.target.value).encodeABI()
+      // let result = await sendTx(this, account, pk, funcionAbi)
+      // const sample = await this.$web3.utils.toAscii("0x7508143378688c24a90e10589026b9caee42ff9ab9aef81f81001478653b5613")
+      const sample = await this.$flibraContract.methods.getNumberOfItem().call()
+      console.log(sample)
     }
   },
   async mounted() {

@@ -7,7 +7,7 @@ export default async function(app, address, pk, functionAbi) {
   var details = await {
       nonce : nonce,
       gasPrice : 0,
-      gasLimit: 50000,
+      gasLimit: 5000000,
       from : address,
       to : app.$flibraContract.options.address, //app.$contract.options.address, 
       data : functionAbi,

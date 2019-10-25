@@ -31,7 +31,7 @@ async function setContract() {
   console.log('Watching event')
 
   // --------- PostItem event ---------
-  flibraContract.events.PostItem({ }, function(error, event){  })
+  flibraContract.events.PostItem({ from: 0, to : 'lastBlock' }, function(error, event){  })
   .on('data', function(event){
       console.log(event.returnValues)
       setItemInFirebase(event)
