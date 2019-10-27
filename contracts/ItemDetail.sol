@@ -24,7 +24,6 @@ contract ItemDetail {
         item.push(Item(_itemName, _itemPhoto, _price, _itemDetailText, _category, _subCategory, _itemCondition));
     }
     
-    
     function getItem() public view returns(Item memory) {
         return item[0];
     }
@@ -42,6 +41,5 @@ contract ItemDetail {
         item[0] = _item;
         emit EditItem(_itemName, _itemPhoto, _price, _itemDetailText, _category, _subCategory,  _itemCondition);
     }
-    
     
 }
