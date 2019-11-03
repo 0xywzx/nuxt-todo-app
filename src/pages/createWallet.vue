@@ -19,6 +19,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
+import { LibraWallet, Account as LibraAccount } from 'kulap-libra';
 
 export default {
   data(){
