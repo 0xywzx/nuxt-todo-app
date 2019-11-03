@@ -19,6 +19,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
+const BigNumber = require('bignumber.js')
 import { LibraWallet, LibraClient, LibraNetwork, Account as LibraAccount } from 'kulap-libra';
 
 export default {
@@ -34,10 +35,10 @@ export default {
 
       console.log(account.getAddress().toHex())
 
-      // const client = new LibraClient({ network: LibraNetwork.Testnet })
-      // await client.mintWithFaucetService(account.getAddress(), 20e6)
+      const client = new LibraClient({ network: LibraNetwork.Testnet })
+      const result = await client.mintWithFaucetService(account.getAddress().toHex(), BigNumber(100).times(1e6).toString(10))
 
-      //const result = await client.mintWithFaucetService(address, BigNumber(100).times(1e6).toString(10))
+      console.log(result)
 
       // const url = "http://localhost:3005/createWallet"
       // const response = await this.$axios.post(url)
