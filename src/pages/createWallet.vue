@@ -19,7 +19,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
-import { LibraWallet, Account as LibraAccount } from 'kulap-libra';
+import { LibraWallet, LibraClient, LibraNetwork, Account as LibraAccount } from 'kulap-libra';
 
 export default {
   data(){
@@ -29,10 +29,20 @@ export default {
   },
   methods: {
     async createWallet() {
-      const url = "http://localhost:3005/createWallet"
-      const response = await this.$axios.post(url)
-      //console.log(response.data)
-      this.librawallet =response.data
+      const wallet = new LibraWallet()
+      const account = wallet.newAccount()
+
+      console.log(account.getAddress().toHex())
+
+      // const client = new LibraClient({ network: LibraNetwork.Testnet })
+      // await client.mintWithFaucetService(account.getAddress(), 20e6)
+
+      //const result = await client.mintWithFaucetService(address, BigNumber(100).times(1e6).toString(10))
+
+      // const url = "http://localhost:3005/createWallet"
+      // const response = await this.$axios.post(url)
+      // //console.log(response.data)
+      // this.librawallet =response.data
     }  
   }
 }
