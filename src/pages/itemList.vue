@@ -22,6 +22,8 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
+import { LibraWallet, LibraClient, LibraNetwork } from 'kulap-libra';
+const BigNumber = require('bignumber.js')
 import sendTx from "~/plugins/sendTx.js"
 
 export default {
@@ -40,18 +42,40 @@ export default {
       getOnSaleItems: "item/getOnSaleItems"
     }),
     async purchase(itemId, toAddress, amount) {
-      const address = await this.$store.state.user.etherAddress
-      const pk = await this.$store.state.user.pk
+      // const address = await this.$store.state.user.etherAddress
+      // const pk = await this.$store.state.user.pk
       const mnemonic = await this.$store.state.user.mnemonic
-      const functionAbi = await this.$flibraContract.methods.purchaseItem(itemId).encodeABI()
-      await sendTx(this, address, pk, functionAbi)
-      const transferLibra = await this.$axios.post(`http://localhost:3005/transfer`, { 
-        fromAddress: address,
-        mnemonic: mnemonic,
-        toAddress: toAddress,
-        amount: amount 
+      // const functionAbi = await this.$flibraContract.methods.purchaseItem(itemId).encodeABI()
+      // await sendTx(this, address, pk, functionAbi)
+      
+      const client = new LibraClient({ 
+        transferProtocol: 'https',
+        host: 'ac-libra-testnet.kulap.io',
+        port: '443',
+        dataProtocol: 'grpc-web-text' 
       })
-      console.log(transferLibra)
+      const wallet = new LibraWallet({
+        mnemonic: mnemonic
+      })
+      const account = wallet.newAccount()
+      const amountToTransfer = BigNumber(100).times(1e6)
+
+      // Stamp account state before transfering
+      const beforeAccountState = await client.getAccountState(account.getAddress())
+
+      // Transfer
+      let toLibraAddress = "9b05871301dcbbd278db6741733dd98ada138e19f2f01a043546e25371661b2d"
+      const response = await client.transferCoins(account, toLibraAddress, amountToTransfer)
+
+      console.log(response)
+
+      // const transferLibra = await this.$axios.post(`http://localhost:3005/transfer`, { 
+      //   fromAddress: address,
+      //   mnemonic: mnemonic,
+      //   toAddress: toAddress,
+      //   amount: amount 
+      // })
+      // console.log(transferLibra)
     }
   },
   async created() {
