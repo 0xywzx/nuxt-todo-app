@@ -15,6 +15,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
+import { LibraWallet } from 'kulap-libra';
 import getPrivateKeyFromMnemonic from "~/plugins/mnemonic-privatekey-utils.js"
 
 export default {
@@ -36,15 +37,20 @@ export default {
 
     },
     async login(e) {
-      const url = "http://localhost:3005/login"
-      const response = await this.$axios.post(url, {
+      // const url = "http://localhost:3005/login"
+      // const response = await this.$axios.post(url, {
+      //   mnemonic: e.target.value
+      // })
+      const wallet = new LibraWallet({
         mnemonic: e.target.value
       })
+      const account = wallet.generateAccount(0)
+
       let privateKeyEther = await getPrivateKeyFromMnemonic(e.target.value)
       privateKeyEther = await '0x' + privateKeyEther
       console.log(privateKeyEther)
       const etherAddress = this.$web3.eth.accounts.privateKeyToAccount(privateKeyEther).address;
-      await this.$store.commit("user/setlibraAddress", response.data.address);
+      await this.$store.commit("user/setlibraAddress", account.getAddress().toHex());
       await this.$store.commit('user/setmnemonic', e.target.value);
       await this.$store.commit('user/setetherAddress', etherAddress);
       await this.$store.commit('user/setetherPk', privateKeyEther);
