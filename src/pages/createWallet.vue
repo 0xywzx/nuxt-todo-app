@@ -20,7 +20,7 @@
 <script>
 import { mapMutations, mapActions } from 'vuex'
 const BigNumber = require('bignumber.js')
-import { LibraWallet, LibraClient, LibraNetwork, Account as LibraAccount } from 'kulap-libra';
+import { LibraWallet } from 'kulap-libra';
 //import libraClient from '~/plugins/libra-core'
 
 export default {
@@ -34,6 +34,7 @@ export default {
       
       const wallet = new LibraWallet()
       const account = wallet.newAccount()
+      console.log(account.getAddress().toHex())
 
       const url = `http://faucet.testnet.libra.org?amount=${BigNumber(100).times(1e6).toString(10)}&address=${account.getAddress().toHex()}`
       fetch(url, {
