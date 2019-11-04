@@ -103,8 +103,13 @@ export default {
   },
   async asyncData({app, store, commit}) {
     const address = await store.state.user.libraAddress;
-    const walletBalance = await app.$axios.post(`http://localhost:3005/getBalance`, { address: address })
-    return { libraBalance: walletBalance.data.balance } 
+    // const walletBalance = await app.$axios.post(`http://localhost:3005/getBalance`, { address: address })
+    // return { libraBalance: walletBalance.data.balance } 
+    const client = new LibraClient({ network: LibraNetwork.Testnet })
+    const accountState = await client.getAccountState(address);
+
+    // log account balance
+    console.log(accountState.balance.toString());
   }
 }
 

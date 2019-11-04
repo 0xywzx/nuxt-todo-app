@@ -43,6 +43,12 @@ export default {
       }).then( function(data) {
         console.log(data)
       })
+
+      this.librawallet = {
+        address: account.getAddress().toHex(),
+        mnemonic: wallet.config.mnemonic
+      }
+
     }  
   }
 }
