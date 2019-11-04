@@ -1,4 +1,4 @@
-import { LibraClient } from 'kulap-libra';
+import { LibraClient, LibraNetwork } from 'kulap-libra';
 
 const libraClient = new LibraClient({
   transferProtocol: 'https',

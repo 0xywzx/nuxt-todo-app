@@ -21,6 +21,7 @@
 import { mapMutations, mapActions } from 'vuex'
 const BigNumber = require('bignumber.js')
 import { LibraWallet, LibraClient, LibraNetwork, Account as LibraAccount } from 'kulap-libra';
+//import libraClient from '~/plugins/libra-core'
 
 export default {
   data(){
@@ -30,20 +31,17 @@ export default {
   },
   methods: {
     async createWallet() {
+      
       const wallet = new LibraWallet()
       const account = wallet.newAccount()
 
-      console.log(account.getAddress().toHex())
-
-      const client = new LibraClient({ network: LibraNetwork.Testnet })
-      const result = await client.mintWithFaucetService(account.getAddress().toHex(), BigNumber(100).times(1e6).toString(10))
-
-      console.log(result)
-
-      // const url = "http://localhost:3005/createWallet"
-      // const response = await this.$axios.post(url)
-      // //console.log(response.data)
-      // this.librawallet =response.data
+      const url = `http://faucet.testnet.libra.org?amount=${BigNumber(100).times(1e6).toString(10)}&address=${account.getAddress().toHex()}`
+      fetch(url, {
+        method: 'post',
+        mode: 'no-cors'
+      }).then( function(data) {
+        console.log(data)
+      })
     }  
   }
 }
