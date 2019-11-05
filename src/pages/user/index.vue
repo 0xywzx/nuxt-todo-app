@@ -57,6 +57,7 @@ import ReviewToPurchaser from '@/components/UserPage/ReviewToPurchaser'
 import ReviewToSeller from '@/components/UserPage/ReviewToSeller'
 import PostItemsList from '@/components/UserPage/PostItemsList'
 import { mapMutations, mapActions } from 'vuex'
+import { LibraClient, LibraNetwork } from 'kulap-libra';
 import sendTx from "~/plugins/sendTx.js"
 
 export default {
@@ -105,11 +106,16 @@ export default {
     const address = await store.state.user.libraAddress;
     // const walletBalance = await app.$axios.post(`http://localhost:3005/getBalance`, { address: address })
     // return { libraBalance: walletBalance.data.balance } 
-    const client = new LibraClient({ network: LibraNetwork.Testnet })
+    const client = new LibraClient({ 
+      transferProtocol: 'https',
+      host: 'ac-libra-testnet.kulap.io',
+      port: '443',
+      dataProtocol: 'grpc-web-text' 
+    })
     const accountState = await client.getAccountState(address);
-
     // log account balance
     console.log(accountState.balance.toString());
+    return { libraBalance: accountState.balance.toString() }
   }
 }
 
