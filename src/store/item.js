@@ -1,6 +1,7 @@
 import sendTx from "~/plugins/sendTx.js"
 
 export const state = () => ({
+  allItems: [],
   onSaleItems: [],
   myPostedItems: [],
   myPurchaedItems: [],
@@ -10,6 +11,9 @@ export const state = () => ({
 })
 
 export const mutations = {
+  setAllItems(state, item) {
+    state.allItems.push(item)
+  },
   setOnSaleItems(state, item) {
     state.onSaleItems.push(item)
   },
@@ -31,6 +35,13 @@ export const mutations = {
 };
 
 export const actions = {
+  async getAllItems({commit, state}) {
+    const numberOfItem = await this.$flibraContract.methods.getNumberOfItem().call()
+    for ( var l = 0; l < numberOfItem; l++ ) {
+      const item = await this.$flibraContract.methods.getAllItem(l).call()
+      commit('setAllItems', item)
+    }
+  },
   async getOnSaleItems({commit, state}) {
     const numberOfItem = await this.$flibraContract.methods.getNumberOfItem().call()
     if (numberOfItem > 0 ) {

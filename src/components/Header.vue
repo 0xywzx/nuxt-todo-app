@@ -11,7 +11,7 @@
         <li><nuxt-link to="/user">My Page</nuxt-link></li>
         <li><nuxt-link to="/itemPost">Item Post</nuxt-link></li>
         <li><nuxt-link to="/itemList">Item List</nuxt-link></li>
-        <li><nuxt-link to="/user">Item Edit</nuxt-link></li>
+        <li><nuxt-link to="/allItems">All Items</nuxt-link></li>
       </ul>
     </nav>
   </header>
