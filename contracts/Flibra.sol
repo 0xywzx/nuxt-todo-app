@@ -3,14 +3,14 @@ pragma experimental ABIEncoderV2;
 
 contract FLibra {
 
-  address constant temporaryPurchaser = address(0);
+  string constant temporaryPurchaser = "0000000000000000000000000000000000000000000000000000000000";
   uint256 internal itemId = 0;
   uint256[] public onSaleItems;
 
-  Item[] public allItems; 
+  mapping(uint => Item) public allItems;
 
-  mapping(address => uint[]) public myItemId;
-  mapping(address => uint[]) public myPurchasedItemId;
+  mapping(string => uint[]) internal myItemId;
+  mapping(string => uint[]) internal myPurchasedItemId;
   mapping(address => User) public UserInfo;
   mapping(uint256 => SellerReview) public reviewToSeller;
   mapping(uint256 => PurchaserReview) public reviewToPurchaser;
@@ -19,9 +19,9 @@ contract FLibra {
   struct Item {
     uint256 id;
     address itemDetailContract;
-    address seller;
+    string seller;
+    string purchaser;
     bool selling;
-    address purchaser;
   }
 
   struct User {
@@ -43,8 +43,8 @@ contract FLibra {
   }
 
   //events
-  event PostItem(uint256 id, address itemDetailContract, address seller, bool selling, address purchaser);
-  event ItemPurchased(uint256 id, address purchaser);
+  event PostItem(uint256 id, address itemDetailContract, string seller, string purchaser, bool selling);
+  event ItemPurchased(uint256 id, string purchaser);
   // EditItem(uint256 id, string itemName, uint256 price);
   event UserInfoCreated(address userAddress, string userName, string userIcon);
   event WriteReviewToSeller(uint256 itemId, uint256 star, string text);
@@ -61,22 +61,22 @@ contract FLibra {
   } 
 
   // -------- Post a Item --------
-  function postItem(address _itemDetailContract) public {
+  function postItem(address _itemDetailContract, string memory _sellerLibraAddress) public {
     itemId = itemId + 1;
-    allItems.push(Item(itemId, _itemDetailContract, msg.sender, true, temporaryPurchaser));
-    myItemId[msg.sender].push(itemId);
+    allItems[itemId] = Item(itemId, _itemDetailContract, _sellerLibraAddress, temporaryPurchaser, true);
+    myItemId[_sellerLibraAddress].push(itemId);
     //onSaleItems[allItems[itemId].selling].push(allItems[itemId].id);
-    emit PostItem(itemId, _itemDetailContract, msg.sender, true, temporaryPurchaser);
+    emit PostItem(itemId, _itemDetailContract, _sellerLibraAddress, temporaryPurchaser, true);
   }
 
   // -------- Purchase a Item --------
-  function purchaseItem(uint256 _id) public {
+  function purchaseItem(uint256 _id, string memory _purchaserLibraAddress) public {
     Item memory _item = allItems[_id];
     _item.selling = bool(false);
-    _item.purchaser = msg.sender;
+    _item.purchaser = _purchaserLibraAddress;
     allItems[_id] = _item;
-    myPurchasedItemId[msg.sender].push(_id);
-    emit ItemPurchased(_id, msg.sender);
+    myPurchasedItemId[_purchaserLibraAddress].push(_id);
+    emit ItemPurchased(_id, _purchaserLibraAddress);
   }
 
   // -------- Edit a Item --------
@@ -90,24 +90,24 @@ contract FLibra {
   // }
 
   // -------- Write Review to Seller --------
-  function writeReviewToSeller(uint256 _id, uint256 _star, string memory _text) public {
+  function writeReviewToSeller(uint256 _id, uint256 _star, string memory _text, string memory _purchaserLibraAddress) public {
     require(allItems[_id].selling == bool(false));
-    require(allItems[_id].purchaser == msg.sender);
+     require(keccak256(bytes(allItems[_id].purchaser)) == keccak256(bytes(_purchaserLibraAddress)));
     reviewToSeller[_id] = SellerReview(_id, _star, _text);
     emit WriteReviewToSeller(_id, _star, _text);
   }
 
   // -------- Write Review to Purchaser --------
-  function writeReviewToPurchaser(uint256 _id, uint256 _star, string memory _text) public {
+  function writeReviewToPurchaser(uint256 _id, uint256 _star, string memory _text, string memory _sellerLibraAddress) public {
     require(allItems[_id].selling == bool(false));
-    require(allItems[_id].seller == msg.sender);
+    require(keccak256(bytes(allItems[_id].seller)) == keccak256(bytes(_sellerLibraAddress)));
     reviewToPurchaser[_id] = PurchaserReview(_id, _star, _text);
     emit WriteReviewToPurchaser(_id, _star, _text);
   }
 
   // -------- My Items --------
-  function getMyItemId(address _address) public view returns (uint[] memory) {
-    return myItemId[_address];
+  function getMyItemId(string memory _libraAddress) public view returns (uint[] memory) {
+    return myItemId[_libraAddress];
   }
 
   function getMyItem(uint256 _id) public view returns (Item memory) {
@@ -116,7 +116,7 @@ contract FLibra {
 
   // -------- All Items --------
   function getNumberOfItem() public view returns (uint256) {
-    return allItems.length;
+    return itemId;
   }
 
   function getAllItem(uint256 _id) public view returns (Item memory) {
@@ -135,8 +135,8 @@ contract FLibra {
   }
 
   // -------- My Purchased Items --------
-  function getMyPurchasedItemId(address _address) public view returns (uint[] memory) {
-    return myPurchasedItemId[_address];
+  function getMyPurchasedItemId(string memory _libraAddress) public view returns (uint[] memory) {
+    return myPurchasedItemId[_libraAddress];
   }
 
   function getMyPurchasedItem(uint256 _id) public view returns (Item memory) {
