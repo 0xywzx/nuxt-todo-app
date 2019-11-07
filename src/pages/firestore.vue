@@ -81,6 +81,7 @@ export default {
       //let ref_req = await firebase.firestore().collection('search_request');
       const snap = await this.ref_req.add(query);
       const key = await snap.id;
+      console.log(key)
       this.unsubscribe = await this.ref_res.doc(key).onSnapshot(this.showResults);
     },
     async showResults(snap) {

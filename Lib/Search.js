@@ -27,6 +27,7 @@ class Search {
         this.refReq = firebase.firestore().collection(this.refReq);
         this.refRes = firebase.firestore().collection(this.refRes);
         this.unsubscribe = null;
+        console.log(1)
         this.unsubscribe = this.refReq.onSnapshot(this._showResults.bind(this));
     }
 
@@ -35,13 +36,18 @@ class Search {
          * firestoreに投げられた検索リクエストを取得して、Elasticsearchに渡すクエリに変換する
         */
         snap.forEach((doc) => {
-            let { from, q, size } = doc.data();
+            let { from, q, size } = doc.data(); // qがフロントからのデータ
             let query = {
                 index: this.index,
                 type: this.type,
                 body: {
                   query: {
-                    match_all: {}
+                      bool : {
+                          should : [
+                            {match: {itemName:"限定"}},
+                            {match: {itemDetailText:"限定"}}
+                          ]
+                      }
                   },
                 },
                 from,
