@@ -74,9 +74,10 @@ export default {
         // formで変数は変更可能にできる
         index: 'flibra',
         type: 'item',
-        size: 10,
+        size: 20,
         from: 0,
-        q: 'user'
+        searchText: '限定',
+        subCategory: 0
       };
       //let ref_req = await firebase.firestore().collection('search_request');
       const snap = await this.ref_req.add(query);
