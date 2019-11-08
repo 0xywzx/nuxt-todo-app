@@ -77,7 +77,7 @@ export default {
         size: 20,
         from: 0,
         searchText: '限定',
-        subCategory: 0
+        subC: 2
       };
       //let ref_req = await firebase.firestore().collection('search_request');
       const snap = await this.ref_req.add(query);

@@ -35,10 +35,10 @@ class Search {
          * firestoreに投げられた検索リクエストを取得して、Elasticsearchに渡すクエリに変換する
         */
         snap.forEach((doc) => {
-            let { from, searchText, size, subCategory } = doc.data(); // qがフロントからのデータ
-            console.log()
+            let { from, searchText, size, subC } = doc.data(); // qがフロントからのデータ
+            console.log(doc.data())
             // 全文検索のみの場合
-            if(subCategory == 0 ) {
+            if(subC == 0 ) {
                 let query = {
                     index: this.index,
                     type: this.type,
@@ -59,6 +59,36 @@ class Search {
             }
             // 全文検索 + カテゴリー検索
             else {
+                let query = {
+                    index: this.index,
+                    type: this.type,
+                    body: {
+                      query: {
+                          bool: {
+                              must: [
+                                  {
+                                      bool: {
+                                          should: [
+                                            {match: {itemName: searchText }},
+                                            {match: {itemDetailText: searchText }}
+                                          ]
+                                      }
+                                  },
+                                  {
+                                      bool: {
+                                          must: {
+                                            term: { itemId : 6 }
+                                          }
+                                      }
+                                  }
+                              ]
+                          }
+                      }
+                    },
+                    from,
+                    size,
+                }
+                this._searchWithElasticsearch(doc, query)
 
             }
         })
