@@ -28,7 +28,32 @@
       </p>
       <hr />
       <p>Elasticsearch</p>
-      <el-button class="button" @click="search">Search</el-button>
+      <el-form ref="form" :model="form" label-width="120px" style="width: 500px">
+        <el-form-item label="検索ワード">
+          <el-input type="text" placeholder="Please input" v-model="form.searchText"></el-input>
+        </el-form-item>
+        <el-form-item label="カテゴリー">
+          <el-select v-model="form.category" placeholder="カテゴリー">
+            <el-option
+              v-for="item in categoryList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="サブカテゴリー">
+          <el-select v-model="form.subC" placeholder="サブカテゴリー">
+            <el-option
+              v-for="item in subCategoryList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-button class="button" @click="search">Search</el-button>
+      </el-form>  
       <div  v-for="item in items">
         <span>ID:{{ item.source.id }} </span>
         <span>NAME:{{ item.source.itemName }}</span>
@@ -42,6 +67,8 @@
 import firebase from '~/plugins/firebase'
 import 'firebase/firestore'
 import { mapGetters } from 'vuex'
+import itemOption from "./itemOption.json"
+import undefined from 'firebase/firestore'
 
 export default {
   data() {
@@ -52,6 +79,12 @@ export default {
       unsubscribe: null,
       ref_req: firebase.firestore().collection('search_request'),
       ref_res: firebase.firestore().collection('search_response'),
+      categoryList : itemOption.categoryList,
+      subCategoryList : itemOption.subCategoryList1,
+      form: {
+        searchText: '',
+        subC: ''
+      }
     }
   },
   computed: {
@@ -70,19 +103,25 @@ export default {
       this.newLimit = ''
     },
     async search() {
-      let query = {
-        // formで変数は変更可能にできる
-        index: 'flibra',
-        type: 'item',
-        size: 20,
-        from: 0,
-        searchText: '限定',
-        subC: 2
-      };
-      //let ref_req = await firebase.firestore().collection('search_request');
-      const snap = await this.ref_req.add(query);
-      const key = await snap.id;
-      this.unsubscribe = await this.ref_res.doc(key).onSnapshot(this.showResults);
+      console.log(this.subC == undefined)
+      if (this.subC !== undefined && this.searchText == undefined) {
+
+      } else {
+        let query = {
+          // formで変数は変更可能にできる
+          index: 'flibra',
+          type: 'item',
+          size: 20,
+          from: 0,
+          searchText: this.searchText,
+          subC: this.subC
+        }
+        console.log(query)
+        //let ref_req = await firebase.firestore().collection('search_request');
+        // const snap = await this.ref_req.add(query);
+        // const key = await snap.id;
+        // this.unsubscribe = await this.ref_res.doc(key).onSnapshot(this.showResults);
+      }
     },
     async showResults(snap) {
       if (snap.data() == undefined ){
