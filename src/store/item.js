@@ -7,7 +7,8 @@ export const state = () => ({
   myPurchaedItems: [],
   writeReviewsToPurchaser: [],
   myReviewsAsSeller: [],
-  myReviewsAsPurchaser: []
+  myReviewsAsPurchaser: [],
+  categorizedItem: []
 })
 
 export const mutations = {

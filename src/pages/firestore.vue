@@ -105,7 +105,7 @@ export default {
     async search() {
       console.log(this.subC == undefined)
       if (this.subC !== undefined && this.searchText == undefined) {
-
+        this.getCategorizedItemFromFirestore() 
       } else {
         let query = {
           // formで変数は変更可能にできる
@@ -118,9 +118,9 @@ export default {
         }
         console.log(query)
         //let ref_req = await firebase.firestore().collection('search_request');
-        // const snap = await this.ref_req.add(query);
-        // const key = await snap.id;
-        // this.unsubscribe = await this.ref_res.doc(key).onSnapshot(this.showResults);
+        const snap = await this.ref_req.add(query);
+        const key = await snap.id;
+        this.unsubscribe = await this.ref_res.doc(key).onSnapshot(this.showResults);
       }
     },
     async showResults(snap) {
@@ -136,6 +136,10 @@ export default {
         this.unsubscribe = null;
       }
     },
+    async getCategorizedItemFromFirestore() {
+      await this.getCategorizedItem
+      this.item = this.$store.state.item.categorizedItem
+    }
   },
   async created() {
     this.$store.dispatch('firestoreItem/setTodosRef')
