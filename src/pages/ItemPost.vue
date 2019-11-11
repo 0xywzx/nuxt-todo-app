@@ -16,7 +16,7 @@
           <el-input type="text" placeholder="商品の詳細な説明を記載してください" v-model="form.detailText"></el-input>
         </el-form-item>
         <el-form-item label="カテゴリー">
-          <el-select v-model="form.category" placeholder="カテゴリー">
+          <el-select v-model="form.category" v-on:change="selected" placeholder="カテゴリー">
             <el-option
               v-for="item in categoryList"
               :key="item.value"
@@ -89,15 +89,18 @@ export default {
     },
   },
   methods: {
+    selected() {
+      this.subCategoryList = itemOption[this.form.category]
+    },
     async captureFile(e) {
-        event.preventDefault()
-        const file = await event.target.files[0]
-        const reader = await new window.FileReader()
-        reader.readAsArrayBuffer(file)
-        reader.onloadend = () => {
-          this.form.buffer = Buffer(reader.result)
-          console.log('buffer', this.form.buffer)
-        }
+      event.preventDefault()
+      const file = await event.target.files[0]
+      const reader = await new window.FileReader()
+      reader.readAsArrayBuffer(file)
+      reader.onloadend = () => {
+        this.form.buffer = Buffer(reader.result)
+        console.log('buffer', this.form.buffer)
+      }
     },
     // async postItem() {
     //   //let result = await this.$ipfs.add(this.form.buffer);  result[0].hash,
